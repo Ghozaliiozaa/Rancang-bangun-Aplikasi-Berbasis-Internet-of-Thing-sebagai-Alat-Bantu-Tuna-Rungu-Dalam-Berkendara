@@ -1,0 +1,9 @@
+Penelitian ini bertujuan untuk merancang dan mengembangkan sistem berbasis 
+Internet of Things (IoT) untuk membantu penyandang tuna rungu dalam berkendara. 
+Sistem ini menggunakan 2 sensor, sensor jarak dan sensor suara. Sensor suara 
+menggunakan FC-04, sedangkan sensor jarak menggunakan HCSR-04. FC-04 digunakan  
+untuk mendeteksi suara klakson atau sirine, sedangkan HCSR-04 digunakan untuk 
+mendeteksi jarak kendaraan terdekat. Data yang dikumpulkan oleh sensor kemudian 
+dikirimkan ke perangkat mobile pengguna, memberikan notifikasi visual sebagai 
+peringatan adanya kendaraan lain di sekitar. Dengan demikian, pengguna dapat 
+merespons situasi di jalan dengan lebih cepat dan tepat
