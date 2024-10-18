@@ -1,0 +1,256 @@
+import 'package:firebase_database/firebase_database.dart'; 
+import 'package:flutter/material.dart'; 
+import 'package:quickalert/quickalert.dart'; 
+class MyHomePage extends StatefulWidget { 
+  const MyHomePage({super.key, required String title}); 
+71 
+ 
+ 
+ 
+ 
+  @override 
+  State<MyHomePage> createState() => _MyHomePageState();} 
+class _MyHomePageState extends State<MyHomePage> { 
+  final DatabaseReference _databaseReference = 
+FirebaseDatabase.instance.ref(); 
+  String jarakKanan = ''; 
+  String jarakKiri = ''; 
+  String jarakKananMeter = ''; 
+  String jarakKiriMeter = ''; 
+  String kebisinganKanan = ''; 
+  String kebisinganKiri = ''; 
+ 
+  @override 
+  void initState() { 
+    super.initState(); 
+    fetchData(); 
+  } 
+ void fetchData() { 
+    
+_databaseReference.child('jarakkanan').onValue.listen((event) { 
+      setState(() { 
+        jarakKanan = event.snapshot.value.toString(); 
+      }); 
+    }); 
+    _databaseReference.child('jarakkiri').onValue.listen((event) 
+{ 
+      setState(() { 
+        jarakKiri = event.snapshot.value.toString(); 
+      }); 
+    });    
+_databaseReference.child('jarakkananmeter').onValue.listen((even
+ t) { 
+      setState(() { 
+        jarakKananMeter = event.snapshot.value.toString(); 
+      }); });  
+_databaseReference.child('jarakkirimeter').onValue.listen((event
+ ) { 
+      setState(() { 
+        jarakKiriMeter = event.snapshot.value.toString();});}); 
+ 
+_databaseReference.child('kebisingankiri').onValue.listen((event
+ ) { 
+      setState(() { 
+        kebisinganKiri = event.snapshot.value.toString(); 
+        checkNoiseLevels(); 
+      }); 
+    });  
+_databaseReference.child('kebisingankanan').onValue.listen((even
+ t) { 
+      setState(() { 
+        kebisinganKanan = event.snapshot.value.toString(); 
+        checkNoiseLevels();});});} 
+ 
+  void checkNoiseLevels() { 
+    double kiri = double.tryParse(kebisinganKiri) ?? 0; 
+    double kanan = double.tryParse(kebisinganKanan) ?? 0; 
+    double jarakKiriVal = double.tryParse(jarakKiriMeter) ?? 0; 
+    double jarakKananVal = double.tryParse(jarakKananMeter) ?? 
+72 
+ 
+ 
+ 
+ 
+0; 
+ 
+ 
+    if (kiri >= 65) { 
+      if (jarakKiriVal == 1) { 
+        showNoiseAlert('Perhatikan Kiri', 'Jarak 1 meter Ada 
+kendaraan dikiri'); 
+      } else if (jarakKiriVal == 2) { 
+        showNoiseAlert('Perhatikan Kiri', 'Jarak 1 meter Ada 
+kendaraan dikiri'); 
+      } else if (jarakKiriVal == 3) { 
+        showNoiseAlert('Perhatikan Kiri', 'Jarak 1 meter Ada 
+kendaraan dikiri'); 
+      } 
+    } 
+ 
+    if (kanan >= 65) { 
+      if (jarakKananVal == 1) { 
+        showNoiseAlert('Perhatikan Kanan', 'Jarak 1 meter Ada 
+kendaraan dikanan'); 
+      } else if (jarakKananVal == 2) { 
+        showNoiseAlert('Perhatikan Kanan', 'Jarak 1 meter Ada 
+kendaraan dikanan'); 
+      } else if (jarakKananVal == 3) { 
+        showNoiseAlert('Perhatikan Kanan', 'Jarak 1 meter Ada 
+kendaraan dikanan'); 
+      } 
+    } 
+  } 
+ 
+  void showNoiseAlert(String title, String message) { 
+    QuickAlert.show( 
+      context: context, 
+      type: QuickAlertType.warning, 
+      title: title, 
+      text: message, 
+      autoCloseDuration: Duration(seconds: 5), 
+    ); 
+  } 
+ 
+  Color getColorBasedOnDistance(String distanceMeter) { 
+    double distance = double.tryParse(distanceMeter) ?? 0; 
+    if (distance <= 1) { 
+      return Colors.red;  
+    } else if (distance <= 2) { 
+      return Colors.yellow;  
+    } else { 
+      return Colors.green; 
+    } 
+  } 
+ 
+  @override 
+  Widget build(BuildContext context) { 
+    return Scaffold( 
+      appBar: AppBar( 
+        title: Text('Dashboard'), 
+        leading: IconButton( 
+          icon: Icon(Icons.arrow_back), 
+73 
+ 
+ 
+ 
+ 
+          onPressed: () { 
+            Navigator.pop(context); 
+          }, 
+        ), 
+      ), 
+      body: Center( 
+        child: Row( 
+          mainAxisAlignment: MainAxisAlignment.center, 
+          children: [ 
+            Column( 
+              mainAxisSize: MainAxisSize.min, 
+              children: [ 
+                Stack( 
+                  alignment: Alignment.center, 
+                  children: [ 
+                    Container( 
+                      width: 100, 
+                      height: 100, 
+                      decoration: BoxDecoration( 
+                        color: 
+getColorBasedOnDistance(jarakKiriMeter), 
+                        shape: BoxShape.circle, 
+                        boxShadow: [ 
+                          BoxShadow( 
+                            color: Colors.black26, 
+                            blurRadius: 10, 
+                            offset: Offset(0, 5), 
+                          ), 
+                        ], 
+                      ), 
+                    ), 
+                    Text( 
+                      jarakKiri, 
+                      style: TextStyle( 
+                        color: Colors.white, 
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold, 
+                      ), 
+                    ), 
+                  ], 
+                ), 
+                SizedBox(height: 8), 
+                Container( 
+                  width: 120, 
+                  height: 50, 
+                  decoration: BoxDecoration( 
+                    color: 
+getColorBasedOnDistance(jarakKiriMeter), 
+                    borderRadius: BorderRadius.circular(10), 
+                    boxShadow: [ 
+                      BoxShadow( 
+                        color: Colors.black26, 
+                        blurRadius: 10, 
+                        offset: Offset(0, 5), 
+                      ), 
+                    ], 
+                  ), 
+                  child: Center( 
+74 
+ 
+ 
+ 
+ 
+                    child: Text( 
+                      jarakKiriMeter + 'm', 
+                      style: TextStyle( 
+                        color: Colors.white, 
+                        fontSize: 16, 
+                        fontWeight: FontWeight.bold, 
+                      ), 
+                    ), 
+                  ), 
+                ), 
+              ], 
+            ), 
+            SizedBox(width: 40),  
+            Column( 
+              mainAxisSize: MainAxisSize.min, 
+              children: [ 
+                Stack( 
+                  alignment: Alignment.center, 
+                  children: [ 
+                    Container( 
+                      width: 100, 
+                      height: 100, 
+                      decoration: BoxDecoration( 
+                        color: 
+getColorBasedOnDistance(jarakKananMeter), 
+                        shape: BoxShape.circle, 
+                        boxShadow: [ 
+                          BoxShadow( 
+                            color: Colors.black26, 
+                            blurRadius: 10, 
+                            offset: Offset(0, 5),),],), ), 
+                    Text( 
+                      jarakKanan, 
+                      style: TextStyle( 
+                        color: Colors.white, 
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold,),),], ), 
+                SizedBox(height: 8), 
+                Container( 
+                  width: 120, 
+                  height: 50, 
+                  decoration: BoxDecoration( 
+                    color: 
+getColorBasedOnDistance(jarakKananMeter), 
+                    borderRadius: BorderRadius.circular(10), 
+                    boxShadow: [ 
+                      BoxShadow( 
+                        color: Colors.black26, 
+                        blurRadius: 10, 
+                        offset: Offset(0, 5),), ],  ), 
+                  child: Center( 
+                    child: Text( 
+                      jarakKananMeter + ' m', 
+                      style: TextStyle( 
+                        color: Colors.white, 
+                        fontSize: 16, 
+                        fontWeight: FontWeight.bold,
